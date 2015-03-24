@@ -110,61 +110,22 @@ public final class ReflectionUtils {
     }
 
     /**
-     * An convenience method, equivalent to {@link #getFieldsWithAnnotation(Class, Class)}
-     */
-    public static final <T extends Annotation> List<Field> getFieldsWithAnnotation(Object object,
-            Class<T> annotationClass) {
-        return object != null ? getFieldsWithAnnotation(object.getClass(), annotationClass) : null;
-    }
-
-    /**
-     * Return a list of Field objects reflecting all the fields with a specific annotation class
-     * declared by the Class object. This includes public, protected, default (package) access, and
-     * private fields, includes inherited fields. This method returns null if the class or interface
-     * declares no fields.
-     * 
-     * @param clazz
-     *            corresponding to the Class to search its fields
-     * @param annotationClass
-     * @return the list of Field objects representing all the fields with a specific annotation
-     *         class.
-     * @see {@link #getFieldsWithAnnotations(Class, Class...)}
-     */
-    public static final <T extends Annotation> List<Field> getFieldsWithAnnotation(Class<?> clazz,
-            Class<T> annotationClass) {
-        // Get fields of class
-        List<Field> fields = getFields(clazz);
-        if (fields == null || fields.isEmpty()) return null;
-
-        // Checking for fields with annotation
-        List<Field> fieldsWithAnnotation = new ArrayList<Field>();
-        for (Field field : fields) {
-            if (hasAnnotation(field, annotationClass)) {
-                fieldsWithAnnotation.add(field);
-            }
-        }
-
-        return fieldsWithAnnotation.isEmpty() ? null : fieldsWithAnnotation;
-    }
-
-    /**
      * An convenience method, equivalent to {@link #getFieldsWithAnyAnnotations(Class, Class...)} <p/>
      * Return a list of Field objects reflecting any fields that has at least one annotation class
      * declared by the Class object. This includes public, protected, default (package) access, and
      * private fields, includes inherited fields. This method returns null if the class or interface
      * declares no fields.
      */
-    @SuppressWarnings("unchecked")
     public static final <T extends Annotation> List<Field> getFieldsWithAnnotations(Class<?> clazz,
             Class<?>... annotationClasses) {
-        return getFieldsWithAnyAnnotations(clazz, (Class<T>[]) annotationClasses);
+        return getFieldsWithAnyAnnotations(clazz, annotationClasses);
     }
 
     /**
      * @see {@link #getFieldsWithAnnotations(Class, Class...)}
      */
     public static final <T extends Annotation> List<Field> getFieldsWithAnyAnnotations(Class<?> clazz,
-            Class<T>... annotationClasses) {
+            Class... annotationClasses) {
         // Get fields of class
         List<Field> fields = getFields(clazz);
         if (fields == null || fields.isEmpty()) return null;
@@ -184,7 +145,7 @@ public final class ReflectionUtils {
      * @see {@link #getFieldsWithAnnotations(Class, Class...)}
      */
     public static final <T extends Annotation> List<Field> getFieldsWithAllAnnotations(Class<?> clazz,
-            Class<T>... annotationClasses) {
+            Class... annotationClasses) {
         // Get fields of class
         List<Field> fields = getFields(clazz);
         if (fields == null || fields.isEmpty()) return null;
@@ -236,30 +197,21 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Return true if field has a specific annotation class, otherwise return false
-     * 
+     * Return true if field has at least one annotation class, otherwise return false
      * @param field
-     * @param clazz
+     * @param classes
      *            corresponding to the annotation class
-     * @return true if field has a specific annotation class, otherwise return false
-     * @see {@link #hasAnnotationClass(Class, Class)} {@link #hasAllAnnotations(Field, Class...)}
+     * @return true if field has at least one annotation class, otherwise return false
+     * @see {@link #hasAnyAnnotations(Field, Class...)} {@link #hasAllAnnotations(Field, Class...)}
      */
-    public static final <T extends Annotation> boolean hasAnnotation(Field field, Class<T> clazz) {
-        return field != null && field.isAnnotationPresent(clazz);
-    }
-
-    /**
-     * An convenience method, equivalent to {@link #hasAnyAnnotations(Field, Class...)}
-     */
-    @SuppressWarnings("unchecked")
     public static final <T extends Annotation> boolean hasAnnotations(Field field, Class<?>... classes) {
-        return hasAnyAnnotations(field, (Class<T>[]) classes);
+        return hasAnyAnnotations(field, classes);
     }
 
     /**
      * @see {@link #hasAnnotations(Field, Class...)}
      */
-    public static final <T extends Annotation> boolean hasAnyAnnotations(Field field, Class<T>... classes) {
+    public static final <T extends Annotation> boolean hasAnyAnnotations(Field field, Class... classes) {
         if (classes == null || classes.length == 0) return false;
 
         for (Class<T> clazz : classes) {
@@ -272,7 +224,7 @@ public final class ReflectionUtils {
     /**
      * @see {@link #hasAnnotations(Field, Class...)}
      */
-    public static final <T extends Annotation> boolean hasAllAnnotations(Field field, Class<T>... classes) {
+    public static final <T extends Annotation> boolean hasAllAnnotations(Field field, Class... classes) {
         if (classes == null || classes.length == 0) return false;
 
         for (Class<T> clazz : classes) {
